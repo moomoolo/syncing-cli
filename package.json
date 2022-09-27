@@ -1,0 +1,24 @@
+{
+  "name": "syncing-cli",
+  "version": "1.0.0",
+  "description": "command line tool for syncing files in real time",
+  "main": "index.js",
+  "bin": "./lib/index.js",
+  "scripts": {
+    "build": "tsc",
+    "lint": "eslint ./src/**/*"
+  },
+  "keywords": [
+    "cli",
+    "file",
+    "sync"
+  ],
+  "author": "moomoolo",
+  "license": "MIT",
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.38.1",
+    "@typescript-eslint/parser": "^5.38.1",
+    "eslint": "^8.24.0",
+    "typescript": "^4.8.3"
+  }
+}
