@@ -1,8 +1,10 @@
 {
   "compilerOptions": {
-    "target": "ES5",
+    "target": "ES2015",
     "module": "CommonJS",
-    "outDir": "./lib"
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "outDir": "./lib",
   },
-  "include": ["./src/**/*"]
+  "include": ["./src/**/*"],
 }
