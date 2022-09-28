@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "command line tool for syncing files in real time",
   "main": "index.js",
-  "bin": "./lib/index.js",
+  "bin": {
+    "syncing": "./lib/index.js"
+  },
   "scripts": {
     "build": "tsc",
     "lint": "eslint ./src/**/*"
