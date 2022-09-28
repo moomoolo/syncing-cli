@@ -17,7 +17,7 @@ export default async function diff(options: DiffOptions) {
 
 function diffDefault() {
   const [dirOne, dirTwo] = appConfig.getDirList()
-  diffDirectories(dirOne, dirTwo)
+  diffDirectories(dirOne, dirTwo, { log: true })
 }
 
 async function diffOrder() {
@@ -32,5 +32,5 @@ async function diffOrder() {
   ]
   const { newDir } = await inquirer.prompt(questions);
   const oldDir = dirList.find((dir) => dir !== newDir);
-  diffDirectories(oldDir, newDir)
+  diffDirectories(oldDir, newDir, { log: true })
 }

@@ -2,6 +2,7 @@ import chalk from 'chalk';
 import inquirer, { QuestionCollection } from 'inquirer';
 import path from 'path';
 import appConfig from '../utils/appConfig';
+import tips from '../utils/tips';
 import validateDir from '../utils/validateDir';
 
 export default async function config() {
@@ -23,7 +24,5 @@ export default async function config() {
   ]
   const { dirOne, dirTwo } = await inquirer.prompt(questions)
   appConfig.setDirList([dirOne, dirTwo]);
-  console.log(`📂 ${chalk.yellow('set directories: ')}`)
-  console.log(`   ${chalk.blueBright(dirOne)}`)
-  console.log(`   ${chalk.blueBright(dirTwo)}`)
+  console.log(tips.setDirectories([dirOne, dirTwo]))
 }

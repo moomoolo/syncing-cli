@@ -1,12 +1,9 @@
-import chalk from "chalk";
 import appConfig from "../utils/appConfig";
+import tips from "../utils/tips";
 
 export default function configList() {
-  console.log(`📂 ${chalk.yellow('directories: ')}`);
   const dirList= appConfig.getDirList()
   if (dirList) {
-    dirList.forEach((dir) => {
-      console.log(`   ${dir}`)
-    })
+    console.log(tips.showDirectories(dirList))
   }
 }
