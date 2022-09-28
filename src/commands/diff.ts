@@ -19,8 +19,9 @@ export default async function diff(options: DiffOptions) {
 }
 
 function diffDefault() {
-  const [dirOne, dirTwo] = appConfig.getDirList();
-  console.log(tips.dirDiffResult(diffDirectories(dirOne, dirTwo)));
+  const [oldDir, newDir] = appConfig.getDirList();
+  console.log(tips.compareDir(oldDir, newDir));
+  console.log(tips.dirDiffResult(diffDirectories(oldDir, newDir)));
 }
 
 async function diffOrder() {
@@ -35,5 +36,6 @@ async function diffOrder() {
   ];
   const { newDir } = await inquirer.prompt(questions);
   const oldDir = dirList.find((dir) => dir !== newDir);
+  console.log(tips.compareDir(oldDir, newDir));
   console.log(tips.dirDiffResult(diffDirectories(oldDir, newDir)));
 }

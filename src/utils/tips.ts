@@ -25,32 +25,35 @@ const showDirectories = (dirList: string[]) => {
 };
 
 const compareDir = (oldDir: string, newDir: string) => {
-  return `${chalk.yellow('Comparing: ')}${newDir}\n${chalk.yellow(
-    '       to: '
-  )}${oldDir}`;
+  let res = `${chalk.yellow('Comparing: ')}${newDir}\n`;
+  res += `${chalk.yellow('       to: ')}${oldDir}`;
+  return res;
 };
 
 const listAdded = (diffList: DirDiff[]) => {
   return diffList.reduce((prev, diffRes) => {
-    return `${prev}\n  ${diffRes.type === 'file' ? '📃' : '📂'} ${chalk.green(
-      diffRes.diffPath
-    )}`;
+    let res = `${prev}\n`;
+    res += `  ${diffRes.type === 'file' ? '📃' : '📂'} `;
+    res += `${chalk.green(diffRes.diffPath)}`;
+    return res;
   }, `${chalk.yellow('Added:')}`);
 };
 
 const listDeleted = (diffList: DirDiff[]) => {
   return diffList.reduce((prev, diffRes) => {
-    return `${prev}\n  ${diffRes.type === 'file' ? '📃' : '📂'} ${chalk.red(
-      diffRes.diffPath
-    )}`;
+    let res = `${prev}\n`;
+    res += `  ${diffRes.type === 'file' ? '📃' : '📂'} `;
+    res += `${chalk.red(diffRes.diffPath)}`;
+    return res;
   }, `${chalk.yellow('Deleted:')}`);
 };
 
 const listChanged = (diffList: DirDiff[]) => {
   return diffList.reduce((prev, diffRes) => {
-    return `${prev}\n  ${diffRes.type === 'file' ? '📃' : '📂'} ${chalk.blue(
-      diffRes.diffPath
-    )}`;
+    let res = `${prev}\n`;
+    res += `  ${diffRes.type === 'file' ? '📃' : '📂'} `;
+    res += `${chalk.blue(diffRes.diffPath)}`;
+    return res;
   }, `${chalk.yellow('Changed:')}`);
 };
 
@@ -59,13 +62,24 @@ const configDirListFirst = toErrorStr(
 );
 
 const dirDiffResult = (diffResult: DirDiffResult) => {
-  const { addedList, deletedList, changedList } = diffResult;
+  const { same, addedList, deletedList, changedList } = diffResult;
+  if (same) {
+    return sameDir;
+  }
   const lists = [addedList, deletedList, changedList];
   return [listAdded, listDeleted, listChanged].reduce((prev, listFunc, i) => {
     const list = lists[i];
-    return list.length > 0 ? `${prev}\n${listFunc(list)}` : prev;
+    return list.length > 0 ? `${prev}${i === 0 ? '' : '\n'}${listFunc(list)}` : prev;
   }, '');
 };
+
+const syncDir = (oldDir: string, newDir: string) => {
+  let res = `${chalk.yellow('Syncing: ')}${newDir}\n`;
+  res += `${chalk.yellow('     to: ')}${oldDir}`;
+  return res;
+};
+
+const sameDir = 'Two directories are same.';
 
 const tips = {
   notDirectory,
@@ -77,7 +91,9 @@ const tips = {
   listDeleted,
   listChanged,
   dirDiffResult,
-  configDirListFirst
+  configDirListFirst,
+  syncDir,
+  sameDir
 };
 
 export default tips;

@@ -1,23 +1,13 @@
 import path from 'path';
 import * as dircompare from 'dir-compare';
-import tips from './tips';
 import { DirDiff, DirDiffResult, DirDiffType } from '../types/diffType';
 
-export default function diffDirectories(
-  oldDir: string,
-  newDir: string
-): DirDiffResult {
-  console.log(tips.compareDir(oldDir, newDir));
+export default function diffDirectories(oldDir: string, newDir: string): DirDiffResult {
   const compOptions: dircompare.Options = {
     compareContent: true,
-    compareFileSync:
-      dircompare.fileCompareHandlers.lineBasedFileCompare.compareSync
+    compareFileSync: dircompare.fileCompareHandlers.lineBasedFileCompare.compareSync
   };
-  const res: dircompare.Result = dircompare.compareSync(
-    oldDir,
-    newDir,
-    compOptions
-  );
+  const res: dircompare.Result = dircompare.compareSync(oldDir, newDir, compOptions);
   return {
     same: res.same,
     addedList: getAddedList(res),
