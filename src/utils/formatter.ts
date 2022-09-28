@@ -1,5 +1,5 @@
-import chalk from "chalk";
+import chalk from 'chalk';
 
 export function toErrorStr(msg: string) {
-  return `${chalk.red('ERROR')} ${msg}`
+  return `${chalk.red('ERROR')} ${msg}`;
 }

@@ -1,6 +1,6 @@
-export type DiffType = 'file' | 'directory'
+export type DiffType = 'file' | 'directory';
 
 export interface DiffRes {
-  diffPath: string
-  type: DiffType
+  diffPath: string;
+  type: DiffType;
 }
