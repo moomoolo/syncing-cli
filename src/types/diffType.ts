@@ -1,6 +1,13 @@
-export type DiffType = 'file' | 'directory';
+export type DirDiffType = 'file' | 'directory';
 
-export interface DiffRes {
+export interface DirDiff {
   diffPath: string;
-  type: DiffType;
+  type: DirDiffType;
+}
+
+export interface DirDiffResult {
+  same: boolean;
+  addedList: DirDiff[];
+  deletedList: DirDiff[];
+  changedList: DirDiff[];
 }

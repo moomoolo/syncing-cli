@@ -1,13 +1,16 @@
 import chalk from 'chalk';
 import inquirer, { QuestionCollection } from 'inquirer';
 import appConfig from '../utils/appConfig';
+import checkDirList from '../utils/checkDirList';
 import diffDirectories from '../utils/diffDirectories';
+import tips from '../utils/tips';
 
 interface DiffOptions {
   order?: boolean;
 }
 
 export default async function diff(options: DiffOptions) {
+  checkDirList();
   if (options.order) {
     await diffOrder();
   } else {
@@ -17,7 +20,7 @@ export default async function diff(options: DiffOptions) {
 
 function diffDefault() {
   const [dirOne, dirTwo] = appConfig.getDirList();
-  diffDirectories(dirOne, dirTwo, { log: true });
+  console.log(tips.dirDiffResult(diffDirectories(dirOne, dirTwo)));
 }
 
 async function diffOrder() {
@@ -32,5 +35,5 @@ async function diffOrder() {
   ];
   const { newDir } = await inquirer.prompt(questions);
   const oldDir = dirList.find((dir) => dir !== newDir);
-  diffDirectories(oldDir, newDir, { log: true });
+  console.log(tips.dirDiffResult(diffDirectories(oldDir, newDir)));
 }

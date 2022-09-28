@@ -1,5 +1,8 @@
 import chalk from 'chalk';
-import { DiffRes } from '../types/diffType';
+import { DirDiff, DirDiffResult } from '../types/diffType';
+import { toErrorStr } from './formatter';
+
+const CMD = 'syncing';
 
 const notDirectory = (dir: string) => {
   return `${dir} is not a directory`;
@@ -27,7 +30,7 @@ const compareDir = (oldDir: string, newDir: string) => {
   )}${oldDir}`;
 };
 
-const addedList = (diffList: DiffRes[]) => {
+const listAdded = (diffList: DirDiff[]) => {
   return diffList.reduce((prev, diffRes) => {
     return `${prev}\n  ${diffRes.type === 'file' ? '📃' : '📂'} ${chalk.green(
       diffRes.diffPath
@@ -35,7 +38,7 @@ const addedList = (diffList: DiffRes[]) => {
   }, `${chalk.yellow('Added:')}`);
 };
 
-const deletedList = (diffList: DiffRes[]) => {
+const listDeleted = (diffList: DirDiff[]) => {
   return diffList.reduce((prev, diffRes) => {
     return `${prev}\n  ${diffRes.type === 'file' ? '📃' : '📂'} ${chalk.red(
       diffRes.diffPath
@@ -43,12 +46,25 @@ const deletedList = (diffList: DiffRes[]) => {
   }, `${chalk.yellow('Deleted:')}`);
 };
 
-const changedList = (diffList: DiffRes[]) => {
+const listChanged = (diffList: DirDiff[]) => {
   return diffList.reduce((prev, diffRes) => {
     return `${prev}\n  ${diffRes.type === 'file' ? '📃' : '📂'} ${chalk.blue(
       diffRes.diffPath
     )}`;
   }, `${chalk.yellow('Changed:')}`);
+};
+
+const configDirListFirst = toErrorStr(
+  `Directories not configured, please config directories using '${CMD} config' first`
+);
+
+const dirDiffResult = (diffResult: DirDiffResult) => {
+  const { addedList, deletedList, changedList } = diffResult;
+  const lists = [addedList, deletedList, changedList];
+  return [listAdded, listDeleted, listChanged].reduce((prev, listFunc, i) => {
+    const list = lists[i];
+    return list.length > 0 ? `${prev}\n${listFunc(list)}` : prev;
+  }, '');
 };
 
 const tips = {
@@ -57,9 +73,11 @@ const tips = {
   setDirectories,
   showDirectories,
   compareDir,
-  addedList,
-  deletedList,
-  changedList
+  listAdded,
+  listDeleted,
+  listChanged,
+  dirDiffResult,
+  configDirListFirst
 };
 
 export default tips;
