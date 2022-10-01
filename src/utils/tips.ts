@@ -85,7 +85,7 @@ const dirNotSame = (oldDir: string, newDir: string) => {
   let res = toErrorStr(`Difference exists between:\n`);
   res += `📂 ${oldDir}\n`;
   res += `📂 ${newDir}\n`;
-  res += `Sync them using '${CMD} sync' first`;
+  res += `Sync them using '${CMD} sync' or manually first`;
   return res;
 };
 
