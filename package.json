@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "command line tool for syncing files in real time",
   "main": "index.js",
+  "repository": "https://github.com/moomoolo/syncing-cli",
   "bin": {
     "syncing": "./lib/index.js"
   },
