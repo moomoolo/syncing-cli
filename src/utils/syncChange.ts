@@ -1,4 +1,4 @@
-import { copyFileSync, mkdirSync, rmdirSync, rmSync } from 'fs';
+import { copyFileSync, mkdirSync, rmdirSync, unlinkSync } from 'fs';
 import path from 'path';
 import {
   logAddDir,
@@ -40,7 +40,7 @@ export default function syncChange(
       logDeleteFile(name, currDir);
       forOther(dirList, currDir, (dir) => {
         const destPath = path.join(dir, name);
-        rmSync(destPath);
+        unlinkSync(destPath);
         logSync(name, dir, 'file');
       });
     }

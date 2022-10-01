@@ -1,4 +1,4 @@
-import { copyFileSync, mkdirSync, rmdirSync, rmSync } from 'fs';
+import { copyFileSync, mkdirSync, rmdirSync, unlinkSync } from 'fs';
 import inquirer, { QuestionCollection } from 'inquirer';
 import path from 'path';
 import appConfig from '../utils/appConfig';
@@ -61,7 +61,7 @@ const syncDir = (oldDir: string, newDir: string) => {
   deletedList.forEach((diff) => {
     if (diff.type === 'file') {
       const destPath = path.join(oldDir, diff.diffPath);
-      rmSync(destPath);
+      unlinkSync(destPath);
     }
   });
   // delete directories
