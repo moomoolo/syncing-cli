@@ -4,7 +4,7 @@ import { toErrorStr } from './formatter';
 
 const CMD = 'syncing';
 
-const version = 'version 1.0.0';
+const version = '1.0.0';
 
 const notDirectory = (dir: string) => {
   return `${dir} is not a directory`;
@@ -81,7 +81,7 @@ const syncDir = (oldDir: string, newDir: string) => {
   return res;
 };
 
-const sameDir = 'Two directories are same.';
+const sameDir = '🥳 Two directories are same.';
 
 const dirNotSame = (oldDir: string, newDir: string) => {
   let res = toErrorStr(`Difference exists between:\n`);
@@ -100,6 +100,11 @@ const watchingDirList = (dirList: string[]) => {
   }, `👀 watching:`);
 };
 
+const checkDirBeforeExit = '🔎 Checking directories before exit...';
+
+const dirSameExit = '🥳 All directories are same, well done!';
+const dirNotSameExit = toErrorStr('🤡 Directories are not same, sorry about that.');
+
 const tips = {
   version,
   notDirectory,
@@ -115,7 +120,10 @@ const tips = {
   syncDir,
   sameDir,
   dirNotSame,
-  watchingDirList
+  watchingDirList,
+  checkDirBeforeExit,
+  dirSameExit,
+  dirNotSameExit
 };
 
 export default tips;

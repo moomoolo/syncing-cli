@@ -35,4 +35,17 @@ export function watch() {
     });
   });
   console.log(tips.watchingDirList(dirList));
+  // check if directories are same before exit
+  process.on('SIGINT', () => {
+    console.log();
+    console.log(tips.checkDirBeforeExit);
+    const [oldDir, newDir] = dirList;
+    const { same } = diffDirectories(oldDir, newDir);
+    if (same) {
+      console.log(tips.dirSameExit);
+    } else {
+      console.log(tips.dirNotSameExit);
+    }
+    process.exit();
+  });
 }
