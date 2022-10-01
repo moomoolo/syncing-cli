@@ -19,7 +19,7 @@ function main() {
   program
     .command('diff')
     .description('show diff between two directories')
-    .option('-o, --order', 'choose compare order')
+    .option('-l, --latest', 'choose latest directory')
     .action(diff);
   program.command('sync').description('sync directories').action(sync);
   program

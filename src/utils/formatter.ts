@@ -12,3 +12,9 @@ export function appendModifyTime(dirList: string[]) {
     return `${dir} ${coloredModifiTime}`;
   });
 }
+
+export function findTrimTime(dirList: string[], dirWithTime: string) {
+  return dirList.find((dir) => {
+    return dirWithTime.indexOf(dir) === 0;
+  });
+}

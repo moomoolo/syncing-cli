@@ -3,16 +3,17 @@ import inquirer, { QuestionCollection } from 'inquirer';
 import appConfig from '../utils/appConfig';
 import checkDirList from '../utils/checkDirList';
 import diffDirectories from '../utils/diffDirectories';
+import { appendModifyTime, findTrimTime } from '../utils/formatter';
 import tips from '../utils/tips';
 
 interface DiffOptions {
-  order?: boolean;
+  latest?: boolean;
 }
 
 export default async function diff(options: DiffOptions) {
   checkDirList();
-  if (options.order) {
-    await diffOrder();
+  if (options.latest) {
+    await diffLatest();
   } else {
     diffDefault();
   }
@@ -24,17 +25,18 @@ function diffDefault() {
   console.log(tips.dirDiffResult(diffDirectories(oldDir, newDir)));
 }
 
-async function diffOrder() {
+async function diffLatest() {
   const dirList = appConfig.getDirList();
   const questions: QuestionCollection = [
     {
-      name: 'newDir',
+      name: 'newDirWithTime',
       type: 'list',
       message: `📂 ${chalk.yellow('Choose new directory: ')}`,
-      choices: dirList
+      choices: appendModifyTime(dirList)
     }
   ];
-  const { newDir } = await inquirer.prompt(questions);
+  const { newDirWithTime } = (await inquirer.prompt(questions)) as { newDirWithTime: string };
+  const newDir = findTrimTime(dirList, newDirWithTime);
   const oldDir = dirList.find((dir) => dir !== newDir);
   console.log(tips.compareDir(oldDir, newDir));
   console.log(tips.dirDiffResult(diffDirectories(oldDir, newDir)));

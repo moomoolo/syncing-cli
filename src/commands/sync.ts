@@ -4,7 +4,7 @@ import path from 'path';
 import appConfig from '../utils/appConfig';
 import checkDirList from '../utils/checkDirList';
 import diffDirectories from '../utils/diffDirectories';
-import { appendModifyTime } from '../utils/formatter';
+import { appendModifyTime, findTrimTime } from '../utils/formatter';
 import tips from '../utils/tips';
 
 export default async function sync() {
@@ -21,9 +21,7 @@ export default async function sync() {
   const { newDirWithTime } = (await inquirer.prompt(questions)) as {
     newDirWithTime: string;
   };
-  const newDir = dirList.find((dir) => {
-    return newDirWithTime.indexOf(dir) === 0;
-  });
+  const newDir = findTrimTime(dirList, newDirWithTime);
   const oldDir = dirList.find((dir) => dir !== newDir);
   syncDir(oldDir, newDir);
 }

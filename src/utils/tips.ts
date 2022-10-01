@@ -71,7 +71,7 @@ const dirDiffResult = (diffResult: DirDiffResult) => {
   const lists = [addedList, deletedList, changedList];
   return [listAdded, listDeleted, listChanged].reduce((prev, listFunc, i) => {
     const list = lists[i];
-    return list.length > 0 ? `${prev}${i === 0 ? '' : '\n'}${listFunc(list)}` : prev;
+    return list.length > 0 ? `${prev}${!prev ? '' : '\n'}${listFunc(list)}` : prev;
   }, '');
 };
 
