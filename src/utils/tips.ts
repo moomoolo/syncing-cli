@@ -81,6 +81,23 @@ const syncDir = (oldDir: string, newDir: string) => {
 
 const sameDir = 'Two directories are same.';
 
+const dirNotSame = (oldDir: string, newDir: string) => {
+  let res = toErrorStr(`Difference exists between:\n`);
+  res += `📂 ${oldDir}\n`;
+  res += `📂 ${newDir}\n`;
+  res += `Sync them using '${CMD} sync' first`;
+  return res;
+};
+
+const watchingDirList = (dirList: string[]) => {
+  if (!dirList || dirList.length === 0) {
+    return '';
+  }
+  return dirList.reduce((prev, dir) => {
+    return `${prev}\n  📂 ${dir}`;
+  }, `👀 watching:`);
+};
+
 const tips = {
   notDirectory,
   cannotAccess,
@@ -93,7 +110,9 @@ const tips = {
   dirDiffResult,
   configDirListFirst,
   syncDir,
-  sameDir
+  sameDir,
+  dirNotSame,
+  watchingDirList
 };
 
 export default tips;
