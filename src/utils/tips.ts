@@ -1,10 +1,10 @@
-import chalk from 'chalk';
 import { DirDiff, DirDiffResult } from '../types/diffType';
+import { blue, green, red, yellow } from './colors';
 import { toErrorStr } from './formatter';
 
 const CMD = 'syncing';
 
-const version = '1.0.0';
+const version = '1.1.0';
 
 const notDirectory = (dir: string) => {
   return `${dir} is not a directory`;
@@ -16,19 +16,19 @@ const cannotAccess = (path: string) => {
 
 const setDirectories = (dirList: string[]) => {
   return dirList.reduce((prev, dir) => {
-    return `${prev}\n   ${chalk.blueBright(dir)}`;
-  }, `📂 ${chalk.yellow('set directories: ')}`);
+    return `${prev}\n   ${blue(dir)}`;
+  }, `📂 ${yellow('set directories: ')}`);
 };
 
 const showDirectories = (dirList: string[]) => {
   return dirList.reduce((prev, dir) => {
-    return `${prev}\n   ${chalk.blueBright(dir)}`;
-  }, `📂 ${chalk.yellow('directories: ')}`);
+    return `${prev}\n   ${blue(dir)}`;
+  }, `📂 ${yellow('directories: ')}`);
 };
 
 const compareDir = (oldDir: string, newDir: string) => {
-  let res = `${chalk.yellow('Comparing: ')}${newDir}\n`;
-  res += `${chalk.yellow('       to: ')}${oldDir}`;
+  let res = `${yellow('Comparing: ')}${newDir}\n`;
+  res += `${yellow('       to: ')}${oldDir}`;
   return res;
 };
 
@@ -36,27 +36,27 @@ const listAdded = (diffList: DirDiff[]) => {
   return diffList.reduce((prev, diffRes) => {
     let res = `${prev}\n`;
     res += `  ${diffRes.type === 'file' ? '📃' : '📂'} `;
-    res += `${chalk.green(diffRes.diffPath)}`;
+    res += `${green(diffRes.diffPath)}`;
     return res;
-  }, `${chalk.yellow('Added:')}`);
+  }, `${yellow('Added:')}`);
 };
 
 const listDeleted = (diffList: DirDiff[]) => {
   return diffList.reduce((prev, diffRes) => {
     let res = `${prev}\n`;
     res += `  ${diffRes.type === 'file' ? '📃' : '📂'} `;
-    res += `${chalk.red(diffRes.diffPath)}`;
+    res += `${red(diffRes.diffPath)}`;
     return res;
-  }, `${chalk.yellow('Deleted:')}`);
+  }, `${yellow('Deleted:')}`);
 };
 
 const listChanged = (diffList: DirDiff[]) => {
   return diffList.reduce((prev, diffRes) => {
     let res = `${prev}\n`;
     res += `  ${diffRes.type === 'file' ? '📃' : '📂'} `;
-    res += `${chalk.blue(diffRes.diffPath)}`;
+    res += `${blue(diffRes.diffPath)}`;
     return res;
-  }, `${chalk.yellow('Changed:')}`);
+  }, `${yellow('Changed:')}`);
 };
 
 const configDirListFirst = toErrorStr(
@@ -76,8 +76,8 @@ const dirDiffResult = (diffResult: DirDiffResult) => {
 };
 
 const syncDir = (oldDir: string, newDir: string) => {
-  let res = `${chalk.yellow('Syncing: ')}${newDir}\n`;
-  res += `${chalk.yellow('     to: ')}${oldDir}`;
+  let res = `${yellow('Syncing: ')}${newDir}\n`;
+  res += `${yellow('     to: ')}${oldDir}`;
   return res;
 };
 
@@ -87,7 +87,7 @@ const dirNotSame = (oldDir: string, newDir: string) => {
   let res = toErrorStr(`Difference exists between:\n`);
   res += `📂 ${oldDir}\n`;
   res += `📂 ${newDir}\n`;
-  res += `Sync them using '${CMD} sync' or manually first`;
+  res += `😘 Sync them using '${CMD} sync' or manually first`;
   return res;
 };
 
