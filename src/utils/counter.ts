@@ -19,9 +19,10 @@ export default class Counter<T> {
   }
 
   increment(item: T) {
-    const currCnt = this.counterMap.get(item) ?? 0;
+    let currCnt = this.counterMap.get(item) ?? 0;
     if (currCnt >= Number.MAX_SAFE_INTEGER - 1) {
       this.resize();
+      currCnt = this.counterMap.get(item) ?? 0;
     }
     this.counterMap.set(item, currCnt + 1);
     if (currCnt + 1 > this.maximun) {
