@@ -4,6 +4,8 @@ import { toErrorStr } from './formatter';
 
 const CMD = 'syncing';
 
+const version = 'version 1.0.0';
+
 const notDirectory = (dir: string) => {
   return `${dir} is not a directory`;
 };
@@ -99,6 +101,7 @@ const watchingDirList = (dirList: string[]) => {
 };
 
 const tips = {
+  version,
   notDirectory,
   cannotAccess,
   setDirectories,
