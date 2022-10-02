@@ -1,6 +1,6 @@
 import { EOL } from 'os';
 import { DirDiff, DirDiffResult, FileDiff } from '../types/diffType';
-import { bgGreen, bgRed, blue, green, red, yellow } from './colors';
+import { bgGreen, bgRed, cyan, green, red, yellow } from './colors';
 import { toErrorStr } from './formatter';
 
 const CMD = 'syncing';
@@ -17,13 +17,13 @@ const cannotAccess = (path: string) => {
 
 const setDirectories = (dirList: string[]) => {
   return dirList.reduce((prev, dir) => {
-    return `${prev}\n   ${blue(dir)}`;
+    return `${prev}\n   ${cyan(dir)}`;
   }, `📂 ${yellow('set directories: ')}`);
 };
 
 const showDirectories = (dirList: string[]) => {
   return dirList.reduce((prev, dir) => {
-    return `${prev}\n   ${blue(dir)}`;
+    return `${prev}\n   ${cyan(dir)}`;
   }, `📂 ${yellow('directories: ')}`);
 };
 
@@ -154,17 +154,15 @@ const fileDiff = (diff: FileDiff, paddingStart = ''): string => {
         let line = paddingStart;
         if (added) {
           oldLineNumLen > 0 && (line += ''.padStart(oldLineNumLen + 1));
-          line += bgGreen(
-            `${padStartWithChalk(newLineNum.toString(), newLineNumLen, yellow)} ${value}`
-          );
+          line += `${padStartWithChalk(newLineNum.toString(), newLineNumLen, yellow)} `;
+          line += green(value);
         } else if (removed) {
-          let raw = `${padStartWithChalk(oldLineNum.toString(), oldLineNumLen, yellow)} `;
-          newLineNumLen > 0 && (raw += ''.padStart(newLineNumLen + 1));
-          raw += value;
-          line += bgRed(raw);
+          line += `${padStartWithChalk(oldLineNum.toString(), oldLineNumLen, yellow)} `;
+          newLineNumLen > 0 && (line += ''.padStart(newLineNumLen + 1));
+          line += red(value);
         } else {
           line += `${padStartWithChalk(oldLineNum.toString(), oldLineNumLen, yellow)} `;
-          line += `${padStartWithChalk(oldLineNum.toString(), oldLineNumLen, yellow)} ${value}`;
+          line += `${padStartWithChalk(newLineNum.toString(), newLineNumLen, yellow)} ${value}`;
         }
         return `${prevContent}${prevContent ? '\n' : ''}${line}`;
       },
@@ -201,7 +199,7 @@ const listChanged = (diffList: DirDiff[], verbose = false) => {
     const { type, diffPath } = diffRes;
     let res = `${prev}\n`;
     res += `  ${type === 'file' ? '📃' : '📂'} `;
-    res += `${blue(diffPath)}`;
+    res += `${cyan(diffPath)}`;
     verbose && type === 'file' && (res += `\n${fileDiff(diffRes.fileDiffList, '  ')}`);
     return res;
   }, `${yellow('Changed:')}`);
