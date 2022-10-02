@@ -1,5 +1,6 @@
-import { DirDiff, DirDiffResult } from '../types/diffType';
-import { blue, green, red, yellow } from './colors';
+import { EOL } from 'os';
+import { DirDiff, DirDiffResult, FileDiff } from '../types/diffType';
+import { bgGreen, bgRed, blue, green, red, yellow } from './colors';
 import { toErrorStr } from './formatter';
 
 const CMD = 'syncing';
@@ -32,29 +33,176 @@ const compareDir = (oldDir: string, newDir: string) => {
   return res;
 };
 
-const listAdded = (diffList: DirDiff[]) => {
+const ellipsis = '...';
+
+interface LineDiff {
+  value: string;
+  added?: boolean;
+  removed?: boolean;
+  oldLineNum?: number;
+  newLineNum?: number;
+}
+
+interface FillDiffBlock {
+  omit: boolean;
+  diffList: LineDiff[];
+}
+
+const padStartWithChalk = (
+  str: string,
+  maxLen: number,
+  chalk: (str: string) => string,
+  fillString = ' '
+) => {
+  const restLen = maxLen - str.length;
+  const repeat = Math.ceil(restLen / fillString.length);
+  const restStr = new Array(repeat).fill(fillString).join().substring(0, restLen);
+  return `${restStr}${chalk(str)}`;
+};
+
+const fileDiff = (diff: FileDiff, paddingStart = ''): string => {
+  const VISIBLE_OFFSET = 3;
+
+  let oldLineCnt = 0;
+  let newLineCnt = 0;
+  const lineDiffList: LineDiff[] = diff.reduce((prev, change) => {
+    const lines = change.value.split(EOL);
+    // diff keep EOL of every line, and split may cause trailing ''
+    if (lines.length !== change.count && lines.length !== change.count + 1) {
+      throw new Error(`something wrong with ${JSON.stringify(change)}`);
+    }
+    if (lines.length === change.count + 1) {
+      lines.pop();
+    }
+
+    const lineDiffs: LineDiff[] = lines.map((line) => {
+      const res: LineDiff = {
+        value: line,
+        added: change.added,
+        removed: change.removed
+      };
+      // line number in old file and new file
+      if (change.added) {
+        newLineCnt++;
+        res.newLineNum = newLineCnt;
+      } else if (change.removed) {
+        oldLineCnt++;
+        res.oldLineNum = oldLineCnt;
+      } else {
+        newLineCnt++;
+        oldLineCnt++;
+        res.newLineNum = newLineCnt;
+        res.oldLineNum = oldLineCnt;
+      }
+      return res;
+    });
+    return [...prev, ...lineDiffs];
+  }, [] as LineDiff[]);
+
+  const lineVisible = new Array<boolean>(lineDiffList.length).fill(false);
+  for (let i = 0; i < lineDiffList.length; i++) {
+    const lineDiff = lineDiffList[i];
+    if (lineDiff.added || lineDiff.removed) {
+      for (
+        let j = Math.max(0, i - VISIBLE_OFFSET);
+        j < Math.min(lineDiffList.length, i + VISIBLE_OFFSET + 1);
+        j++
+      ) {
+        lineVisible[j] = true;
+      }
+    }
+  }
+
+  const diffBlockList: FillDiffBlock[] = [];
+  let maxVisibleOldLine = 0;
+  let maxVisibleNewLine = 0;
+  for (let i = 0; i < lineVisible.length; ) {
+    if (lineVisible[i]) {
+      const diffList: LineDiff[] = [];
+      while (i < lineVisible.length && lineVisible[i]) {
+        const lineDiff = lineDiffList[i];
+        diffList.push(lineDiff);
+        lineDiff.oldLineNum && (maxVisibleOldLine = lineDiff.oldLineNum);
+        lineDiff.newLineNum && (maxVisibleNewLine = lineDiff.newLineNum);
+        i++;
+      }
+      diffBlockList.push({
+        omit: false,
+        diffList
+      });
+    } else {
+      while (i < lineVisible.length && !lineVisible[i]) {
+        i++;
+      }
+      diffBlockList.push({ omit: true, diffList: [] });
+    }
+  }
+
+  const oldLineNumLen = maxVisibleOldLine > 0 ? maxVisibleNewLine.toString().length : 0;
+  const newLineNumLen = maxVisibleNewLine > 0 ? maxVisibleNewLine.toString().length : 0;
+  return diffBlockList.reduce((prev: string, { omit, diffList }) => {
+    if (omit) {
+      let res = `${prev}${prev ? '\n' : ''}${paddingStart}`;
+      oldLineNumLen > 0 && (res += `${''.padStart(oldLineNumLen)} `);
+      newLineNumLen > 0 && (res += `${''.padStart(newLineNumLen)} `);
+      res += ellipsis;
+      return res;
+    }
+    // get lines to show
+    const content = diffList.reduce(
+      (prevContent, { oldLineNum, newLineNum, added, removed, value }) => {
+        let line = paddingStart;
+        if (added) {
+          oldLineNumLen > 0 && (line += ''.padStart(oldLineNumLen + 1));
+          line += bgGreen(
+            `${padStartWithChalk(newLineNum.toString(), newLineNumLen, yellow)} ${value}`
+          );
+        } else if (removed) {
+          let raw = `${padStartWithChalk(oldLineNum.toString(), oldLineNumLen, yellow)} `;
+          newLineNumLen > 0 && (raw += ''.padStart(newLineNumLen + 1));
+          raw += value;
+          line += bgRed(raw);
+        } else {
+          line += `${padStartWithChalk(oldLineNum.toString(), oldLineNumLen, yellow)} `;
+          line += `${padStartWithChalk(oldLineNum.toString(), oldLineNumLen, yellow)} ${value}`;
+        }
+        return `${prevContent}${prevContent ? '\n' : ''}${line}`;
+      },
+      ''
+    );
+    return `${prev}${prev ? '\n' : ''}${content}`;
+  }, '');
+};
+
+const listAdded = (diffList: DirDiff[], verbose = false) => {
   return diffList.reduce((prev, diffRes) => {
+    const { type, diffPath } = diffRes;
     let res = `${prev}\n`;
-    res += `  ${diffRes.type === 'file' ? '📃' : '📂'} `;
-    res += `${green(diffRes.diffPath)}`;
+    res += `  ${type === 'file' ? '📃' : '📂'} `;
+    res += `${green(diffPath)}`;
+    verbose && type === 'file' && (res += `\n${fileDiff(diffRes.fileDiffList, '  ')}`);
     return res;
   }, `${yellow('Added:')}`);
 };
 
-const listDeleted = (diffList: DirDiff[]) => {
+const listDeleted = (diffList: DirDiff[], verbose = false) => {
   return diffList.reduce((prev, diffRes) => {
+    const { type, diffPath } = diffRes;
     let res = `${prev}\n`;
-    res += `  ${diffRes.type === 'file' ? '📃' : '📂'} `;
-    res += `${red(diffRes.diffPath)}`;
+    res += `  ${type === 'file' ? '📃' : '📂'} `;
+    res += `${red(diffPath)}`;
+    verbose && type === 'file' && (res += `\n${fileDiff(diffRes.fileDiffList, '  ')}`);
     return res;
   }, `${yellow('Deleted:')}`);
 };
 
-const listChanged = (diffList: DirDiff[]) => {
+const listChanged = (diffList: DirDiff[], verbose = false) => {
   return diffList.reduce((prev, diffRes) => {
+    const { type, diffPath } = diffRes;
     let res = `${prev}\n`;
-    res += `  ${diffRes.type === 'file' ? '📃' : '📂'} `;
-    res += `${blue(diffRes.diffPath)}`;
+    res += `  ${type === 'file' ? '📃' : '📂'} `;
+    res += `${blue(diffPath)}`;
+    verbose && type === 'file' && (res += `\n${fileDiff(diffRes.fileDiffList, '  ')}`);
     return res;
   }, `${yellow('Changed:')}`);
 };
@@ -63,7 +211,7 @@ const configDirListFirst = toErrorStr(
   `Directories not configured, please config directories using '${CMD} config' first`
 );
 
-const dirDiffResult = (diffResult: DirDiffResult) => {
+const dirDiffResult = (diffResult: DirDiffResult, verbose = false) => {
   const { same, addedList, deletedList, changedList } = diffResult;
   if (same) {
     return sameDir;
@@ -71,7 +219,7 @@ const dirDiffResult = (diffResult: DirDiffResult) => {
   const lists = [addedList, deletedList, changedList];
   return [listAdded, listDeleted, listChanged].reduce((prev, listFunc, i) => {
     const list = lists[i];
-    return list.length > 0 ? `${prev}${!prev ? '' : '\n'}${listFunc(list)}` : prev;
+    return list.length > 0 ? `${prev}${!prev ? '' : '\n'}${listFunc(list, verbose)}` : prev;
   }, '');
 };
 
@@ -112,6 +260,7 @@ const tips = {
   setDirectories,
   showDirectories,
   compareDir,
+  fileDiff,
   listAdded,
   listDeleted,
   listChanged,

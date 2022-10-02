@@ -21,6 +21,7 @@ function main() {
     .command('diff')
     .description('show diff between two directories')
     .option('-l, --latest', 'choose latest directory')
+    .option('-v, --verbose', 'show file difference detail')
     .action(diff);
   program.command('sync').description('sync directories').action(sync);
   program

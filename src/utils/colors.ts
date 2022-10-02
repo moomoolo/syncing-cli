@@ -15,3 +15,11 @@ export const red = (str: string) => {
 export const green = (str: string) => {
   return chalk.hex('#09eb20')(str);
 };
+
+export const bgRed = (str: string) => {
+  return chalk.bgHex('#a30000')(str);
+};
+
+export const bgGreen = (str: string) => {
+  return chalk.bgHex('#086301')(str);
+};
