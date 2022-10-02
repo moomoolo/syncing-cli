@@ -2,6 +2,14 @@
 
 ## [Unreleased]
 
+## [1.2.0] - 2022-10-03
+
+### Changed
+ - Format time to "yyyy-MM-dd HH:mm:ss"
+
+### Fixed
+ - Get last modify time recursively
+
 ## [1.1.0] - 2022-10-02
 
 ### Changed
