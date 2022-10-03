@@ -2,6 +2,16 @@
 
 ## [Unreleased]
 
+## [1.3.0] - 2022-10-03
+
+### Added
+ - `syncing diff -v`: show file difference detail
+ - `syncing diff -r`: compare in reverse order
+ - 'default old' and 'default new' tips
+
+### Changed
+ - abandon `chalk`, use ansi color control instead
+
 ## [1.2.0] - 2022-10-03
 
 ### Changed
