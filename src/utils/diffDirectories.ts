@@ -32,14 +32,14 @@ const getAddedList = (res: dircompare.Result, verbose = false): DirDiff[] => {
       return diff.state === 'right';
     })
     .map((diff) => {
-      const { relativePath, name2: newName, path2: newDir, type2: type } = diff;
+      const { relativePath, name2: newName, path2: newPath, type2: type } = diff;
       const dirDiff: DirDiff = {
         // remove '/' at the beginning
         diffPath: path.join(relativePath, newName).substring(1),
         type: type as DirDiffType
       };
       if (type === 'file' && verbose) {
-        const newFilePath = path.join(newDir, relativePath, newName);
+        const newFilePath = path.join(newPath, newName);
         dirDiff.fileDiffList = diffFiles('', newFilePath).diffList;
       }
       return dirDiff;
@@ -52,7 +52,7 @@ const getDeletedList = (res: dircompare.Result, verbose = false): DirDiff[] => {
       return diff.state === 'left';
     })
     .map((diff) => {
-      const { relativePath, name1: oldName, path1: oldDir, type1: type } = diff;
+      const { relativePath, name1: oldName, path1: oldPath, type1: type } = diff;
       const dirDiff: DirDiff = {
         // remove '/' at the beginning
         diffPath: path.join(relativePath, oldName).substring(1),
@@ -60,7 +60,7 @@ const getDeletedList = (res: dircompare.Result, verbose = false): DirDiff[] => {
       };
 
       if (type === 'file' && verbose) {
-        const oldFilePath = path.join(oldDir, relativePath, oldName);
+        const oldFilePath = path.join(oldPath, oldName);
         dirDiff.fileDiffList = diffFiles(oldFilePath, '').diffList;
       }
 
@@ -78,8 +78,8 @@ const getChangedList = (res: dircompare.Result, verbose = false): DirDiff[] => {
         relativePath,
         name1: oldName,
         name2: newName,
-        path1: oldDir,
-        path2: newDir,
+        path1: oldPath,
+        path2: newPath,
         type1: type
       } = diff;
       const dirDiff: DirDiff = {
@@ -88,8 +88,8 @@ const getChangedList = (res: dircompare.Result, verbose = false): DirDiff[] => {
         type: type as DirDiffType
       };
       if (type === 'file' && verbose) {
-        const oldFilePath = path.join(oldDir, relativePath, oldName);
-        const newFilePath = path.join(newDir, relativePath, newName);
+        const oldFilePath = path.join(oldPath, oldName);
+        const newFilePath = path.join(newPath, newName);
         dirDiff.fileDiffList = diffFiles(oldFilePath, newFilePath).diffList;
       }
       return dirDiff;
