@@ -1,6 +1,6 @@
 import { EOL } from 'os';
 import { DirDiff, DirDiffResult, FileDiff } from '../types/diffType';
-import { bgGreen, bgRed, cyan, green, red, yellow } from './colors';
+import { cyan, green, red, yellow } from './colors';
 import { toErrorStr } from './formatter';
 
 const CMD = 'syncing';

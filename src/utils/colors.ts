@@ -1,5 +1,3 @@
-import chalk from 'chalk';
-
 const ansiiColor = {
   reset: '\x1b[0m',
   font: {
@@ -13,12 +11,6 @@ const ansiiColor = {
     red: '\x1b[41m',
     green: '\x1b[42m'
   }
-};
-
-const trimReset = (str: string) => {
-  // eslint-disable-next-line no-control-regex
-  const reg = /(\x1b\[0m)+$/g;
-  return str.replace(reg, '');
 };
 
 const insertColor = (str: string, color: string) => {
