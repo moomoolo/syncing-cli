@@ -2,6 +2,13 @@
 
 ## [Unreleased]
 
+## [1.5.0]
+
+### just because I forget to update version in -V option
+## [1.4.0] - 2022-10-03
+### Fixed
+ - remove relative path from diff result when get file path
+
 ## [1.3.0] - 2022-10-03
 
 ### Added

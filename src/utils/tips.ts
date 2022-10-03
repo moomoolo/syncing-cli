@@ -5,7 +5,7 @@ import { toErrorStr } from './formatter';
 
 const CMD = 'syncing';
 
-const version = '1.2.0';
+const version = '1.5.0';
 
 const notDirectory = (dir: string) => {
   return `${dir} is not a directory`;
