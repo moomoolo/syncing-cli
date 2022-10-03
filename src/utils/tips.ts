@@ -138,7 +138,7 @@ const fileDiff = (diff: FileDiff, paddingStart = ''): string => {
     }
   }
 
-  const oldLineNumLen = maxVisibleOldLine > 0 ? maxVisibleNewLine.toString().length : 0;
+  const oldLineNumLen = maxVisibleOldLine > 0 ? maxVisibleOldLine.toString().length : 0;
   const newLineNumLen = maxVisibleNewLine > 0 ? maxVisibleNewLine.toString().length : 0;
   return diffBlockList.reduce((prev: string, { omit, diffList }) => {
     if (omit) {
