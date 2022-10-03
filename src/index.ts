@@ -19,9 +19,10 @@ function main() {
     .action(configList);
   program
     .command('diff')
-    .description('show diff between two directories')
+    .description('compare two directories in default order')
     .option('-l, --latest', 'choose latest directory')
     .option('-v, --verbose', 'show file difference detail')
+    .option('-r, --reverse', 'compare in reverse order')
     .action(diff);
   program.command('sync').description('sync directories').action(sync);
   program

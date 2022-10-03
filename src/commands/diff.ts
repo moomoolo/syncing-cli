@@ -9,20 +9,22 @@ import tips from '../utils/tips';
 interface DiffOptions {
   latest?: boolean;
   verbose?: boolean;
+  reverse?: boolean;
 }
 
 export default async function diff(options: DiffOptions) {
-  const { latest, verbose } = options;
+  const { latest, verbose, reverse } = options;
   checkDirList();
   if (latest) {
     await diffLatest(verbose);
   } else {
-    diffDefault(verbose);
+    diffNormal(verbose, reverse);
   }
 }
 
-function diffDefault(verbose = false) {
-  const [oldDir, newDir] = appConfig.getDirList();
+function diffNormal(verbose = false, reverse = false) {
+  let [oldDir, newDir] = appConfig.getDirList();
+  reverse && ([newDir, oldDir] = [oldDir, newDir]);
   console.log(tips.compareDir(oldDir, newDir));
   console.log(tips.dirDiffResult(diffDirectories(oldDir, newDir, { verbose }), verbose));
 }
