@@ -2,9 +2,15 @@
 
 ## [Unreleased]
 
+## [1.6.0] - 2022-10-03
+
+### Changed
+ - change blue to cyan in watch log
+
 ## [1.5.0]
 
 ### just because I forget to update version in -V option
+
 ## [1.4.0] - 2022-10-03
 ### Fixed
  - remove relative path from diff result when get file path
