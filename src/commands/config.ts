@@ -9,7 +9,7 @@ export default async function config() {
     {
       name: 'dirOne',
       type: 'input',
-      message: '📂 Input directory one: ',
+      message: '📂 Input directory one (default old): ',
       validate: (input) => {
         return validateDir(input);
       },
@@ -20,7 +20,7 @@ export default async function config() {
     {
       name: 'dirTwo',
       type: 'input',
-      message: '📂 Input directory two: ',
+      message: '📂 Input directory two (default new): ',
       validate: (input) => {
         return validateDir(input);
       },

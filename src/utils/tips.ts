@@ -1,6 +1,6 @@
 import { EOL } from 'os';
 import { DirDiff, DirDiffResult, FileDiff } from '../types/diffType';
-import { cyan, green, red, yellow } from './colors';
+import { cyan, green, grey, red, yellow } from './colors';
 import { toErrorStr } from './formatter';
 
 const CMD = 'syncing';
@@ -16,15 +16,19 @@ const cannotAccess = (path: string) => {
 };
 
 const setDirectories = (dirList: string[]) => {
-  return dirList.reduce((prev, dir) => {
-    return `${prev}\n   ${cyan(dir)}`;
-  }, `📂 ${yellow('set directories: ')}`);
+  let res = `📂 ${yellow('set directories: ')}`;
+  const [oldDir, newDir] = dirList;
+  res += `\n   ${cyan(oldDir)} ${grey('(default old)')}`;
+  res += `\n   ${cyan(newDir)} ${grey('(default new)')}`;
+  return res;
 };
 
 const showDirectories = (dirList: string[]) => {
-  return dirList.reduce((prev, dir) => {
-    return `${prev}\n   ${cyan(dir)}`;
-  }, `📂 ${yellow('directories: ')}`);
+  let res = `📂 ${yellow('directories: ')}`;
+  const [oldDir, newDir] = dirList;
+  res += `\n   ${cyan(oldDir)} ${grey('(default old)')}`;
+  res += `\n   ${cyan(newDir)} ${grey('(default new)')}`;
+  return res;
 };
 
 const compareDir = (oldDir: string, newDir: string) => {

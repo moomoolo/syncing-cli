@@ -5,7 +5,8 @@ const ansiiColor = {
     green: '\x1b[32m',
     yellow: '\x1b[33m',
     blue: '\x1b[34m',
-    cyan: '\x1b[36m'
+    cyan: '\x1b[36m',
+    grey: '\x1b[38;5;243m'
   },
   bg: {
     red: '\x1b[41m',
@@ -37,6 +38,10 @@ export const red = (str: string) => {
 
 export const green = (str: string) => {
   return insertColor(str, ansiiColor.font.green);
+};
+
+export const grey = (str: string) => {
+  return insertColor(str, ansiiColor.font.grey);
 };
 
 export const bgRed = (str: string) => {

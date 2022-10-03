@@ -1,8 +1,8 @@
-import chalk from 'chalk';
+import { grey, red } from './colors';
 import getLastModify from './getLastModify';
 
 export function toErrorStr(msg: string) {
-  return `${chalk.red('ERROR')} ${msg}`;
+  return `${red('ERROR')} ${msg}`;
 }
 
 export function formatTime(date: Date) {
@@ -18,7 +18,7 @@ export function formatTime(date: Date) {
 export function appendModifyTime(dirList: string[]) {
   return dirList.map((dir) => {
     const modifyTime = new Date(getLastModify(dir));
-    const coloredModifiTime = chalk.grey(`(last modify: ${formatTime(modifyTime)})`);
+    const coloredModifiTime = grey(`(last modify: ${formatTime(modifyTime)})`);
     return `${dir} ${coloredModifiTime}`;
   });
 }
