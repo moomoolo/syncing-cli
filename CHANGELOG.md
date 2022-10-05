@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+
+## [1.6.1] - 2022-10-5
+### fixed
+ - use '' to join padding instead using default ','
+
 ## [1.6.0] - 2022-10-03
 
 ### Changed
