@@ -60,7 +60,7 @@ const padStartWithChalk = (
 ) => {
   const restLen = maxLen - str.length;
   const repeat = Math.ceil(restLen / fillString.length);
-  const restStr = new Array(repeat).fill(fillString).join().substring(0, restLen);
+  const restStr = new Array(repeat).fill(fillString).join('').substring(0, restLen);
   return `${restStr}${chalk(str)}`;
 };
 
